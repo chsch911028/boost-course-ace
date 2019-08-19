@@ -34,6 +34,8 @@
 
 ## Maven
 
+
+
 ### 1. Maven 이란?
 
 1. Maven 이란?
@@ -227,6 +229,376 @@
    - Project 메뉴의 Clean 선택
    - 프로젝트 익스플로러에서 Server 삭제
    - Run on Server 재실행
+
+
+
+## JDBC
+
+
+
+### 1. JDBC란?
+
+1. JDBC(Java Database Connectivity) 개요
+
+   - Java를 이용한 데이터베이스 접속과 SQL 문장의 살행, 그리고 결과로 얻어진 데이터의 핸들링을 제공하는 방법과 절차에 관한 규약
+   - Java 프로그램 내에서 SQL문을 실행하기 위한 JAVA API
+   - Java는 표준 인터페이스인 JDBC API를 제공
+   - 데이터베이스 벤더 또는 서드파티에서는 JDBC 인터페이스를 구현한 드라이버(driver) 제공
+
+   
+
+2. JDBC 환경 구성
+
+   - JDK 설치
+   - JDBC 드라이버 설치
+   - Maven에서는 당므과 같이 의존성을 추가해서 사용할 수 있다.
+
+   ```xml
+   <dependency>   
+       <groupId>mysql</groupId>   
+       <artifactId>mysql-connector-java</artifactId>
+       <version>5.1.45</version>
+   </dependency>
+   ```
+
+
+
+3. JDBC를 이용한 프로그래밍 방법
+
+   - import java.sql.*;
+
+   ```java
+   import java.sql.*;
+   ```
+
+   - 드라이브 로드
+
+   ```java
+   Class.forName( "com.mysql.jdbc.Driver" );
+   ```
+
+   - Connection 객체 생성
+
+   ```java
+   String dburl  = "jdbc:mysql://localhost/dbName";
+   Connection con =  DriverManager.getConnection ( dburl, ID, PWD );
+   ```
+
+   - Statement 객체를 생성 및 질의 수행
+
+   ```java
+   Statement stmt = con.createStatement();
+   ```
+
+   - SQL 문에 결과물이 있다면 ResultSet 객체를 생성
+
+   ```java
+   ResultSet rs =  stmt.executeQuery( "select no from user" );
+   while ( rs.next() )
+         System.out.println( rs.getInt( "no") );
+   
+   //참고
+   stmt.execute(“query”); //any SQL
+   stmt.executeQuery(“query”); //SELECT
+   stmt.executeUpdate(“query”); //INSERT, UPDATE, DELETE
+   ```
+
+   - 모든 객체를 역순으로 닫는다.(ResultSet -> Statement -< Connetcion)
+
+   ```java
+   rs.close();
+   stmt.close();
+   con.close();
+   ```
+
+   
+
+   ![jdbc-class](./img/jdbc-class.png)
+
+- 매번, 객체를 연결하고 닫는 코드가 반복적으로 발생
+- 이 문제를 해결하기 위해서 Spring이 제공하는 JDBC API를 사용하여 간결하게 코드를 구성할 수 있다.
+
+
+
+### 2. JDBC 실습
+
+1. DTO
+
+   - Getter/Setter/toSring 구현
+
+   ```java
+   package kr.or.connect.jdbcexam.dto;
+   
+   public class Role {
+   	private Integer roleId;
+   	private String description;
+   
+   	public Role() {}
+   
+   	public Role(Integer roleId, String description) {
+   		super();
+   		this.roleId = roleId;
+   		this.description = description;
+   	}
+   
+   	public Integer getRoleId() {
+   		return roleId;
+   	}
+   
+   	public void setRoleId(Integer roleId) {
+   		this.roleId = roleId;
+   	}
+   
+   	public String getDescription() {
+   		return description;
+   	}
+   
+   	public void setDescription(String description) {
+   		this.description = description;
+   	}
+   
+   	@Override
+   	public String toString() {
+   		return "Role [roleId=" + roleId + ", description=" + description + "]";
+   	}
+   }
+   ```
+
+
+
+2. DAO
+
+   - Connection 객체 생성: 데이터베이스에 연결해서 요청/응답을 받기 위한 객체
+   - PreparedStatment 객체 생성: query 사용시 ?에 값 바인딩 하는 등의 기능 제공
+   - ResultSet: query의 결과, 테이블 row를 배열 형태로 받아옴
+   - try/catch/finally: 에러처리
+
+   
+
+   - 1) 조회(getRole): 원하는 Role 객체를 테이버에스에서 가져옴
+
+   ```java
+   package kr.or.connect.jdbcexam.dao;
+   
+   import java.sql.Connection;
+   import java.sql.DriverManager;
+   import java.sql.PreparedStatement;
+   import java.sql.ResultSet;
+   import java.sql.SQLException;
+   
+   import kr.or.connect.jdbcexam.dto.Role;
+   
+   public class RoleDao {
+   	private static String dburl = "jdbc:mysql://localhost:3306/connectdb";
+   	private static String dbUser = "connectuser";
+   	private static String dbpasswd = "connect123!@#";
+   	
+     //Role 가져오기
+   	public Role getRole(Integer roleId) {
+   		Role role = null;
+   		Connection conn = null;
+   		PreparedStatement ps = null;
+   		ResultSet rs = null;
+   
+   		try {
+   			Class.forName("com.mysql.jdbc.Driver");
+   			conn = DriverManager.getConnection(dburl, dbUser, dbpasswd);
+   			String sql = "SELECT description,role_id FROM role WHERE role_id = ?";
+   			ps = conn.prepareStatement(sql);
+   			ps.setInt(1, roleId);
+   			rs = ps.executeQuery();
+   
+   			if (rs.next()) {
+   				String description = rs.getString(1);
+   				int id = rs.getInt("role_id");
+   				role = new Role(id, description);
+   			}
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		} finally {
+   			if (rs != null) {
+   				try {
+   					rs.close();
+   				} catch (SQLException e) {
+   					e.printStackTrace();
+   				}
+   			}
+   			if (ps != null) {
+   				try {
+   					ps.close();
+   				} catch (SQLException e) {
+   					e.printStackTrace();
+   				}
+   			}
+   			if (conn != null) {
+   				try {
+   					conn.close();
+   				} catch (SQLException e) {
+   					e.printStackTrace();
+   				}
+   			}
+   		}
+   
+   		return role;
+   	}
+       
+   }
+   ```
+
+   
+
+   - 2)  입력(addRole): 원하는 Role 객체를 데이터베이스에 입력
+
+   ```java
+   //Role 입력
+   public int addRole(Role role) {
+   		int insertCount = 0;
+   
+   		try {
+   			Class.forName("com.mysql.jdbc.Driver");
+   		} catch (ClassNotFoundException e) {
+   			e.printStackTrace();
+   		}
+   		String sql = "INSERT INTO role (role_id, description) VALUES ( ?, ? )";
+   
+   		try (Connection conn = DriverManager.getConnection(dburl, dbUser, dbpasswd);
+   				PreparedStatement ps = conn.prepareStatement(sql)) {
+   
+   			ps.setInt(1, role.getRoleId());
+   			ps.setString(2, role.getDescription());
+   
+   			insertCount = ps.executeUpdate();
+   
+   		} catch (Exception ex) {
+   			ex.printStackTrace();
+   		}
+   		return insertCount;
+   	}  
+   ```
+
+   
+
+   - 3) 수정(updateRole): 원하는 Role 객체의 filed를 수정한다.
+
+   ```java
+   public int updateRole(Role role) {
+   		int updateCount = 0;
+   		
+   		Connection conn = null;
+   		PreparedStatement ps = null;
+   		
+   		try {
+   			Class.forName( "com.mysql.jdbc.Driver" );
+   			conn = DriverManager.getConnection ( dburl, dbUser, dbpasswd );
+   			String sql = "update role set description = ? where role_id = ?";
+   		
+   			ps = conn.prepareStatement(sql);	
+   			ps.setString(1, role.getDescription());
+   			ps.setInt(2,  role.getRoleId());
+   			
+   			updateCount = ps.executeUpdate();
+   
+   		}catch(Exception ex) {
+   			ex.printStackTrace();
+   		}finally {
+   			if(ps != null) {
+   				try {
+   					ps.close();
+   				}catch(Exception ex) {}
+   			} // if
+   			
+   			if(conn != null) {
+   				try {
+   					conn.close();
+   				}catch(Exception ex) {}
+   			} // if
+   		} // finally
+   		
+   		return updateCount;
+   	}
+   ```
+
+   
+
+   - 4) 삭제(deleteRole): 원하는 Role 객체를 데이터베이스에서 삭제한다.
+
+   ```java
+   public int deleteRole(Integer roleId) {
+   		int deleteCount = 0;
+   		
+   		Connection conn = null;
+   		PreparedStatement ps = null;
+   		
+   		try {
+   			Class.forName( "com.mysql.jdbc.Driver" );			
+   			conn = DriverManager.getConnection ( dburl, dbUser, dbpasswd );			
+   			String sql = "DELETE FROM role WHERE role_id = ?";
+   
+   			ps = conn.prepareStatement(sql);
+   			ps.setInt(1,  roleId);
+   			deleteCount = ps.executeUpdate();
+   
+   		}catch(Exception ex) {
+   			ex.printStackTrace();
+   		}finally {
+   			if(ps != null) {
+   				try {
+   					ps.close();
+   				}catch(Exception ex) {}
+   			} // if
+   			
+   			if(conn != null) {
+   				try {
+   					conn.close();
+   				}catch(Exception ex) {}
+   			} // if
+   		} // finally
+   
+   		return deleteCount;
+   	}
+   ```
+
+   
+
+   - 5) 여러개 조회(getRoles): 원하는 조건의 Role 객체를 여러개 가져온다.
+
+   ```java
+   public List<Role> getRoles() {
+   		List<Role> list = new ArrayList<>();
+   
+   		try {
+   			Class.forName("com.mysql.jdbc.Driver");
+   		} catch (ClassNotFoundException e) {
+   			e.printStackTrace();
+   		}
+   
+   		String sql = "SELECT description, role_id FROM role order by role_id desc";
+   		try (Connection conn = DriverManager.getConnection(dburl, dbUser, dbpasswd);
+   				PreparedStatement ps = conn.prepareStatement(sql)) {
+   
+   			try (ResultSet rs = ps.executeQuery()) {
+   
+   				while (rs.next()) {
+   					String description = rs.getString(1);
+   					int id = rs.getInt("role_id");
+   					Role role = new Role(id, description);
+   					list.add(role); // list에 반복할때마다 Role인스턴스를 생성하여 list에 추가한다.
+   				}
+   			} catch (Exception e) {
+   				e.printStackTrace();
+   			}
+   		} catch (Exception ex) {
+   			ex.printStackTrace();
+   		}
+   		return list;
+   	}
+   ```
+
+   
+
+
+
+
 
 
 
