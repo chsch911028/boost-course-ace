@@ -30,8 +30,6 @@
 
 
 
-
-
 ## Maven
 
 
@@ -595,6 +593,176 @@
    ```
 
    
+
+## WEB API
+
+
+
+- API란
+
+  - Application Programming Interface의 약자
+  - 응용 프로그램에서 사용할 수 있도록, 운영체제나 프로그램밍 언어가 제공하는 기능을 제어할 수 있게 만든 인터페이스
+  - 파일 제어, 창 제어, 화상 처리, 문자 제어 등을 위한 인테퍼이스
+
+  
+
+### 1. Rest API란?
+
+- 클라이언트(브라우저, 모바일 앱 등)에게 정보를 제공하는 방식을 하나로 일원화
+- HTTP 프로토콜로 제공하는 API
+- Representational State Transfer
+- 핵심 컨텐츠 및 기능을 외부 사이트에서 사용할 수 있도록 제공되는 인터페이스
+- 구글 지도, 우체국 우편번호 조회, 네비어 블로그 글 저장 등
+- **REST Style(규칙)**
+  - client-server
+  - stateless
+  - cache
+  - uniform interface
+  - layered system
+  - code-on-demand(optional)
+- HTTP 프로토콜을 사용하면 uniform interface를 제외하고는 모두 쉽게 구현 가능
+- uniform interface 스타일
+  - 리소스가 URI로 식별되야 한다.
+  - 리소스를 생성, 수정, 추가하고자 할 때 HTTP 메시지에 표현을 해서 전송해야 한다.
+  - 메시지는 스스로 설명할 수 있어야 한다.(Self-descriptive message)
+  - 어플리케이션의 상태는 Hyperlink를 이용해 전이되야 한다.(HATEOAS)
+- REST API는 쉽지 않다. 그래서, 보통은 Web API(혹은 HTTP API)를 사용한다.
+  - REST의 모든 것을 제공하지 않으면서 REST API라고 말하는 경우도 있따.
+  - REST의 모든 것을 제공하지 않고, Web API(HTTP API)라고 부르는 경우가 있다.
+
+
+
+### 2. Web API란?
+
+1. URI는 정보의 자원을 표현해야 한다.
+
+   - GET /members/delete/1 (X)
+
+   - GET /members (O)
+
+     
+
+2. 자원에 대한 행위는 HTTP Method(GET, POST, PUT, PATCH, DELETE)로 표현해야 한다.
+
+   - GET: 자원 가져오기
+   - POST: 자원 생성
+   - PUT: 자원 수정
+   - DELETE: 자원 삭제
+
+3. 슬래시 구분자(/)는 계층을 나타날 때 사용
+   - ```http://domain/houses/apartments```
+   - ```http://domain/departments/1/employees```
+   - URI 마지막 문자로 슬래시 구분자(/)를 포함하지 않습니다.
+   - 하이픈(-)은 URI가독성을 높일 때 사용합니다.
+   - 언더바(_)는 사용하지 않습니다.
+   - URI경로는 소문자만 사용합니다.
+   - RFC 3986(URI 문법 형식)은 URI스키마와 호스트를 제외하고는 대소문자를 구별합니다.
+   - 파일 확장자는 URI에 포함하지 않습니다.
+   - Accept Header를 사용합니다.
+4. 상태코드
+   - 200: 클라이언트 요청 성공
+   - 400: 클라이언트로 인한 오류
+   - 500: 서버로 인한 오류
+
+
+
+### 3. Web API 실습
+
+1. 의존성 추가
+
+```xml
+<properties>
+  <!-- web.xml 파일을 삭제해도 eclipse에서 오류가 발생하지 않는다. -->
+  <failOnMissingWebXml>false</failOnMissingWebXml>
+</properties>
+<dependencies>
+  <!-- jdbc -->
+  <dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>5.1.45</version>
+  </dependency>
+
+  <!-- json 라이브러리 databind jackson-core, jackson-annotaion에 의존성이 있다. -->
+  <dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.9.4</version>
+  </dependency>
+	
+  <!-- servlet -->
+  <dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>3.1.0</version>
+    <scope>provided</scope>
+  </dependency>
+	
+  <!-- jstl -->
+  <dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>jstl</artifactId>
+    <version>1.2</version>
+  </dependency>
+	
+  <!-- junit -->
+  <dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>3.8.1</version>
+    <scope>test</scope>
+  </dependency>
+</dependencies>
+
+<!-- maven builder -->
+<build>
+  <finalName>webapiexam</finalName>
+  <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>3.6.1</version>
+      <configuration>
+        <source>1.8</source>
+        <target>1.8</target>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
+```
+
+2. RoleServlet.java
+
+```java
+package kr.or.connect.webapiexam.api;
+
+@WebServlet("/roles")
+public class RolesServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	public RolesServlet() {
+		super();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/json");
+
+		RoleDao dao = new RoleDao();
+
+		List<Role> list = dao.getRoles();
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(list);
+
+		PrintWriter out = response.getWriter();
+		out.println(json);
+		out.close();
+	}
+
+}
+```
 
 
 
