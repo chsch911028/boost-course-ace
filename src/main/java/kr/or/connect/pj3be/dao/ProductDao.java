@@ -45,6 +45,14 @@ public class ProductDao {
 
     }
 
+    public Integer selectCount(Integer categoryId){
+        if(categoryId == null){
+            return jdbc.queryForObject(SELECT_COUNT, Collections.emptyMap(), Integer.class);
+        }
+
+        Map<String, Integer> params = Collections.singletonMap("categoryId", categoryId);
+        return jdbc.queryForObject(SELECT_COUNT_BY_CATEGORY_ID, params, Integer.class);
+    }
 
     public Long insert(Product product) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(product);
