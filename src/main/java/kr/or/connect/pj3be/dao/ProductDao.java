@@ -4,7 +4,6 @@ package kr.or.connect.pj3be.dao;
 import static kr.or.connect.pj3be.sql.ProductDaoSqls.*;
 import kr.or.connect.pj3be.dto.Product;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;

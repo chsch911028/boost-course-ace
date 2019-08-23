@@ -15,11 +15,14 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     ProductDao repository;
 
+
     @Transactional
+    @Override
     public List<Product> getList(Integer categoryId, Integer start){
         return repository.selectAll(categoryId, start, ProductService.LIMIT);
     }
 
+    @Override
     public Integer getCount(Integer categoryId){
         return repository.selectCount(categoryId);
     }
