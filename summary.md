@@ -111,6 +111,164 @@
 
 
 
+### 1. EL(Expression Language)
+
+- jsp에 표현식을 이용해 값을 출력할 때 변수의 값이 null이면 화면에 null이 출력되었습니다.
+- 이 경웨, null인지를 검사한 후 null이면 아무것도 없는 문자열을 출력해야 하는 등 불편한 과정을 거쳐야 합니다.
+- EL을 사용하면 좀 더 편리하게 변수를 JSP에서 사용할 수 있습니다.
+
+1. 표현 언어란?
+
+   - 표현 언어는 값을 표현하는데 사용되는 스크립트 언어로서 JSP의 기본 문법을 보완하는 역할을 한다.
+
+   
+
+2. 표현 언어가 제공하는 기능
+
+   - JSP의 스코프에 맞는 속성 사용
+   - 집합 객체에 대한 접근 방법 제공
+   - 수치 연산, 관계 연산, 논리 연산자 제공
+   - 자바 클래스 메소드 호출 기능 제공
+   - 표현언어만의 기본 객체 제공
+
+   
+
+3. 표현언어의 표현방법
+
+   - ${expression}
+   - 예) ```<b>${sessionScope.member.id}</b>```
+
+4. 표현언어의 기본 객체
+   - pageContext: JSP page 기본 객체와 동일
+   - pageScope: <속성, 값> 매핑을 저장한 Map 객체
+   - requestScope: <속성, 값> 매핑을 저장한 Map 객체
+   - sessionScope: <속성, 값> 매핑을 저장한 Map 객체
+   - applicationScope: <속성, 값> 매핑을 저장한 Map 객체
+   - param: 요청 <파라미터이름, 값> 매핑을 저장한 Map 객체(=request.getParameter(이름))
+   - paramValue: 요청 <파라미터이름, 값배열> 매핑을 저장한 Map 객체(=request.getParameterValues(이름))
+   - header: 요청 <헤더이름 값> 매핑을 저장한 Map 객체(=request.getHeader(이름))
+   - headerValue: 요청 <헤더이름 값배열> 매핑을 저장한 Map 객체(=request.getHeaders(이름))
+   - cookie: <쿠키이름, Cookie> 매핑을 저장한 Map 객체.(=request.getCookie()로 구한 Cookie 매핑)
+   - initParam: 초기화 <이름, 값> 매핑을 저장한 Map 객체(=application.getInitParameter(이름)) 결과와 동일
+
+5. 표현 언어의 데이터 타입
+
+   - Boolean, Integer, Float, String, Null
+
+6. 객체 접근 규칙
+
+   - Javascript dot notation으로 접근하는 것과 비슷
+
+7. 표현 언어의 수치 연산자
+
+8. 비교 연산자
+
+9. 논리 연산자
+
+10. empty 연산자
+
+11. 비교선택 연산자(삼항 연산자)
+
+12. EL 비활성화 하기(JSP에 아래와 같이 명시)
+
+    ```xml
+    <%@ page isELIgnored = "true" %>
+    ```
+
+13. pageContext, request, session, application 등에 들어있는 변수명이 겹치지 않으면, 아래와 같이 생략도 가능
+
+    ```jsp
+    <body>
+    pageContext.getAttribute("p1") : ${pageScope.p1 }<br>
+    request.getAttribute("r1") : ${requestScope.r1 }<br>
+    session.getAttribute("s1") : ${sessionScope.s1 }<br>
+    application.getAttribute("a1") : ${applicationScope.a1 }<br>
+    <br><br>
+    pageContext.getAttribute("p1") : ${p1 }<br>
+    request.getAttribute("r1") : ${r1 }<br>
+    session.getAttribute("s1") : ${s1 }<br>
+    application.getAttribute("a1") : ${a1 }<br>
+    </body>
+    ```
+
+    
+
+### 2. JSTL(JSP Standard Tag Library)
+
+
+
+1. JSTL 이란?
+   - JSP 페이지에서 조건문 처리, 반복문 처리 등을 html tag 형태로 작성할 수 있도록 도와준다.
+2. JSTL 사용방법
+   - taglibs 관련 jstlel/spec/impl 3가지 jar파일을 다운받아, WEB-INF/lib/ 폴더에 복사한다.
+3. JSTL이 제공하는 태그의 종류
+
+![jstl-tag](./img/jstl-tag.png)
+
+4. JSTL 코어 태그
+
+![jstl-core](./img/jstl-core.png)
+
+5. JSTL 문법, 코어 태그: 변수 지원 태그 - set, remove
+
+![jstl-grammar](./img/jstl-grammar.png)
+
+6. JSTL 문법, 코어 태그: 변수 지원 태그 - property, map 처리
+
+![jstl-grammar2](./img/jstl-grammar2.png)
+
+7. JSTL 문법, 코어 태그: 흐르제어 태그 - if
+
+```xml
+<c:if test="조건">
+</c:if>
+```
+
+8. JSTL 문법, 코어 태그: 흐름제어 태그 - choose
+
+```xml
+<c:choose>
+	<c:when test="조건1"></c:when>
+  <c:when test="조건2"></c:when>
+  <c:otherwise></c:otherwise>
+</c:choose>
+```
+
+9. JSTL 문법, 코어 태그: 흐름제어 태그 - forEach
+
+```xml
+<c:forEach var="변수" itesm="아이템" [begin="시작번호"] [end="끝번호"]>
+	${변수}
+</c:forEach>
+```
+
+10. JSTL 문법, 코어 태그: 흐름제어 태그 - import
+    - 원하는 페이지를 import해서 보여줄 수 있음
+
+```xml
+<c:import url="URL" charEncoding="캐릭터인코딩" var="변수명" scopre-"범위">
+	<c:param name="파라미터 이름" value="파라미터 값"/>
+</c:import>
+
+<c:import url="http://media.daum.net/" charEncoding="euc-kr" var="daumNews" scopre-"request">
+	<c:param name="_top_G" value="news"/>
+</c:import>
+```
+
+11. JSTL 문법, 코어 태그: 흐름제어 태그 - redirect
+
+```xml
+<c:redirect url="리다이렉트할 URL">
+	<c:param name="파라미터 이름" value="파라미터값"/>
+</c:redirect>
+```
+
+12. JSTL 문법, 코어 태그: 기타 태그 - out
+
+```xml
+<c:out value="value" escapeXml="{true|false}" default="defaultValue"/>
+```
+
 
 
 ## Maven
