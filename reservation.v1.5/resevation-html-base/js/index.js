@@ -9,6 +9,7 @@ $(document).ready(function() {
     }
   };
 
+  //[참고 블로그] https://im-developer.tistory.com/97
   function Carousel(parentsClass = "", itemWidth = 414, moveSpeed = 500) {
     this.list = document.querySelector(`${parentsClass}.carousel-list`);
     this.items = document.querySelectorAll(`${parentsClass}.carousel-item`);
@@ -163,6 +164,14 @@ $(document).ready(function() {
       const totalCount = data.totalCount;
       $(".event_lst_txt span").text(`${totalCount}개`);
 
+      //더보기 UI 상태 조정
+      const moreEl = document.querySelector(".more");
+      if (data.items.length >= totalCount) {
+        moreEl.style.display = "none";
+      } else {
+        moreEl.style.display = "block";
+      }
+
       //4-2. Products Template 세팅
       const productlItemTemp = document.querySelector("#template-product-item")
         .innerHTML;
@@ -217,7 +226,7 @@ $(document).ready(function() {
   //5. Event Tab 클릭시, 상품 초기화, 관련 이벤트 아이템 4개 보여주기, 녹색으로 링크 active 처리
   $(".event_tab_lst.tab_lst_min .item").click(function(e) {
     const clickedEl = $(this);
-    //5-1. 클릭된 item의 category id 가져오기
+    //5-1. 클릭된 item의 category id 가져와서 상태 저장
     const categoryId = Number(clickedEl.attr("data-category"));
 
     //5-2. categoryId별 요청 URL 세팅
@@ -235,6 +244,14 @@ $(document).ready(function() {
         //5-4. 제품 갯수 text update
         const totalCount = data.totalCount;
         $(".event_lst_txt span").text(`${totalCount}개`);
+
+        //더보기 UI 상태 조정
+        const moreEl = document.querySelector(".more");
+        if (data.items.length >= totalCount) {
+          moreEl.style.display = "none";
+        } else {
+          moreEl.style.display = "block";
+        }
 
         //5-5. Products Template 세팅
         const productlItemTemp = document.querySelector(
@@ -292,5 +309,92 @@ $(document).ready(function() {
     $(".event_tab_lst.tab_lst_min .anchor.active").removeClass("active");
     //새로 클릭된 item anchor active 추가
     clickedEl.children(".anchor").addClass("active");
+  });
+
+  //6. 더보기 기능
+  // 6-1. 클릭시 추가 데이터 4개 가져와 보여주기
+  document.querySelector(".more").addEventListener("click", e => {
+    e.preventDefault(); // bubbling 방지
+    const eventBindedEl = e.currentTarget;
+    // categoryId, productsCount 가져오기
+    const categoryId = Number(
+      document
+        .querySelector(".event_tab_lst .item .anchor.active")
+        .parentElement.getAttribute("data-category")
+    );
+    const productsCount = Number(
+      document.querySelector(".wrap_event_box").getAttribute("products-count")
+    );
+
+    let url = `http://localhost:8080/api/products?start=${productsCount}`;
+    if (categoryId > 0) {
+      url += `&categoryId=${categoryId}`;
+    }
+
+    $.ajax({
+      type: "GET",
+      url: url,
+      dataType: "JSON",
+      success: function(data) {
+        // 6-2. 더 이상의 데이터가 없다면 더보기 UI 삭제
+        const totalCount = data.totalCount;
+        if (productsCount + data.items.length >= totalCount) {
+          eventBindedEl.style.display = "none";
+        }
+
+        //Products Template 세팅
+        const productlItemTemp = document.querySelector(
+          "#template-product-item"
+        ).innerHTML;
+        let flag = true;
+        let productItemsLeftHTML = "";
+        let productItemsRightHTML = "";
+
+        if (data.items.length) {
+          data.items.forEach((item, index) => {
+            const {
+              displayInfoId,
+              placeName,
+              productContent,
+              productDescription,
+              productId,
+              productImageUrl
+            } = item;
+
+            const productItem = productlItemTemp
+              .replace(/{displayInfoId}/g, displayInfoId)
+              .replace(/{placeName}/g, placeName)
+              .replace(/{productContent}/g, productContent)
+              .replace(/{productDescription}/g, productDescription)
+              .replace(/{productId}/g, productId)
+              .replace(/{productImageUrl}/g, `../../${productImageUrl}`);
+
+            if (flag) {
+              productItemsLeftHTML += productItem;
+            } else {
+              productItemsRightHTML += productItem;
+            }
+            flag = !flag;
+          });
+        }
+
+        //left
+        document
+          .querySelector(".lst_event_box:nth-child(1)")
+          .insertAdjacentHTML("beforeend", productItemsLeftHTML);
+        //right
+        document
+          .querySelector(".lst_event_box:nth-child(2)")
+          .insertAdjacentHTML("beforeend", productItemsRightHTML);
+
+        //products-count 세팅
+        document
+          .querySelector(".wrap_event_box")
+          .setAttribute(
+            "products-count",
+            `${productsCount + data.items.length}`
+          );
+      }
+    });
   });
 });
