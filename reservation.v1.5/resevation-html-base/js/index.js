@@ -10,10 +10,10 @@ $(document).ready(function() {
   };
 
   function Carousel(parentsClass = "", itemWidth = 414, moveSpeed = 500) {
-    this.list = document.querySelector(`${parentsClass} .carousel-list`);
-    this.items = document.querySelectorAll(`${parentsClass} .carousel-item`);
-    this.nextBtn = document.querySelector(`${parentsClass} .carousel-next-btn`);
-    this.prevBtn = document.querySelector(`${parentsClass} .carousel-prev-btn`);
+    this.list = document.querySelector(`${parentsClass}.carousel-list`);
+    this.items = document.querySelectorAll(`${parentsClass}.carousel-item`);
+    this.nextBtn = document.querySelector(`${parentsClass}.carousel-next-btn`);
+    this.prevBtn = document.querySelector(`${parentsClass}.carousel-prev-btn`);
 
     this.len = this.items.length;
     this.moveSpeed = moveSpeed;
@@ -149,6 +149,68 @@ $(document).ready(function() {
       //3-3. Carousel 기능 binding
       let promotionCarousel = new Carousel();
       promotionCarousel.auto();
+    }
+  });
+
+  //4. 전체리스트 init
+  //4-1. Products api 가져오기
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:8080/api/products",
+    dataType: "JSON",
+    success: function(data) {
+      //4-1. 제품 갯수 text update
+      const totalCount = data.totalCount;
+      $(".event_lst_txt span").text(`${totalCount}개`);
+
+      //4-2. Products Template 세팅
+      const productlItemTemp = document.querySelector("#template-product-item")
+        .innerHTML;
+      let flag = true;
+      let productItemsLeftHTML = "";
+      let productItemsRightHTML = "";
+
+      if (data.items.length) {
+        data.items.forEach((item, index) => {
+          const {
+            displayInfoId,
+            placeName,
+            productContent,
+            productDescription,
+            productId,
+            productImageUrl
+          } = item;
+
+          const productItem = productlItemTemp
+            .replace(/{displayInfoId}/g, displayInfoId)
+            .replace(/{placeName}/g, placeName)
+            .replace(/{productContent}/g, productContent)
+            .replace(/{productDescription}/g, productDescription)
+            .replace(/{productId}/g, productId)
+            .replace(/{productImageUrl}/g, `../../${productImageUrl}`);
+
+          if (flag) {
+            productItemsLeftHTML += productItem;
+          } else {
+            productItemsRightHTML += productItem;
+          }
+          flag = !flag;
+        });
+      }
+
+      //left
+      document
+        .querySelector(".lst_event_box:nth-child(1)")
+        .insertAdjacentHTML("beforeend", productItemsLeftHTML);
+      //right
+      document
+        .querySelector(".lst_event_box:nth-child(2)")
+        .insertAdjacentHTML("beforeend", productItemsRightHTML);
+
+      //4-3. products-count 세팅
+      document
+        .querySelector(".event_tab_lst .item[data-category='0']")
+        .setAttribute("products-count", `${data.items.length}`);
     }
   });
 });
