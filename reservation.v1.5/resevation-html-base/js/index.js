@@ -209,8 +209,88 @@ $(document).ready(function() {
 
       //4-3. products-count 세팅
       document
-        .querySelector(".event_tab_lst .item[data-category='0']")
+        .querySelector(".wrap_event_box")
         .setAttribute("products-count", `${data.items.length}`);
     }
+  });
+
+  //5. Event Tab 클릭시, 상품 초기화, 관련 이벤트 아이템 4개 보여주기, 녹색으로 링크 active 처리
+  $(".event_tab_lst.tab_lst_min .item").click(function(e) {
+    const clickedEl = $(this);
+    //5-1. 클릭된 item의 category id 가져오기
+    const categoryId = Number(clickedEl.attr("data-category"));
+
+    //5-2. categoryId별 요청 URL 세팅
+    let url = `http://localhost:8080/api/products?`;
+    if (categoryId > 0) {
+      url += `categoryId=${categoryId}`;
+    }
+
+    //5-3. Products By categoryId 데이터 받아오기
+    $.ajax({
+      type: "GET",
+      url: url,
+      dataType: "JSON",
+      success: function(data) {
+        //5-4. 제품 갯수 text update
+        const totalCount = data.totalCount;
+        $(".event_lst_txt span").text(`${totalCount}개`);
+
+        //5-5. Products Template 세팅
+        const productlItemTemp = document.querySelector(
+          "#template-product-item"
+        ).innerHTML;
+        let flag = true;
+        let productItemsLeftHTML = "";
+        let productItemsRightHTML = "";
+
+        if (data.items.length) {
+          data.items.forEach((item, index) => {
+            const {
+              displayInfoId,
+              placeName,
+              productContent,
+              productDescription,
+              productId,
+              productImageUrl
+            } = item;
+
+            const productItem = productlItemTemp
+              .replace(/{displayInfoId}/g, displayInfoId)
+              .replace(/{placeName}/g, placeName)
+              .replace(/{productContent}/g, productContent)
+              .replace(/{productDescription}/g, productDescription)
+              .replace(/{productId}/g, productId)
+              .replace(/{productImageUrl}/g, `../../${productImageUrl}`);
+
+            if (flag) {
+              productItemsLeftHTML += productItem;
+            } else {
+              productItemsRightHTML += productItem;
+            }
+            flag = !flag;
+          });
+        }
+
+        //left
+        document.querySelector(
+          ".lst_event_box:nth-child(1)"
+        ).innerHTML = productItemsLeftHTML;
+        //right
+        document.querySelector(
+          ".lst_event_box:nth-child(2)"
+        ).innerHTML = productItemsRightHTML;
+
+        //5-6. products-count 세팅
+        document
+          .querySelector(".wrap_event_box")
+          .setAttribute("products-count", `${data.items.length}`);
+      }
+    });
+
+    //5-7. 이전 anchor active 삭제
+    $(".event_tab_lst.tab_lst_min .anchor.active").removeClass("active");
+    //새로 클릭된 item anchor active 추가
+    clickedEl.children(".anchor").addClass("active");
   });
 });
