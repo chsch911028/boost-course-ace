@@ -10,24 +10,24 @@ $(document).ready(function() {
   };
 
   function Carousel(parentsClass = "", itemWidth = 414, moveSpeed = 500) {
-    this.list = document.querySelector(`${parentsClass}.carousel-list`);
-    this.items = document.querySelectorAll(`${parentsClass}.carousel-item`);
-    this.nextBtn = document.querySelector(`${parentsClass}.carousel-next-btn`);
-    this.prevBtn = document.querySelector(`${parentsClass}.carousel-prev-btn`);
+    this.list = document.querySelector(`${parentsClass} .carousel-list`);
+    this.items = document.querySelectorAll(`${parentsClass} .carousel-item`);
+    this.nextBtn = document.querySelector(`${parentsClass} .carousel-next-btn`);
+    this.prevBtn = document.querySelector(`${parentsClass} .carousel-prev-btn`);
 
     this.len = this.items.length;
     this.moveSpeed = moveSpeed;
     this.itemWidth = itemWidth;
     this.curIndex = 0;
 
-    //Set carousel list width
+    //carousel list width 설정
     this.list.style.width = `${itemWidth * (this.len + 2)}px`;
 
-    //Copy first and last slide
+    //first and last 엘리먼트 복사
     this.clonedFirst = this.list.firstElementChild.cloneNode(true);
     this.clonedLast = this.list.lastElementChild.cloneNode(true);
 
-    // Add copied Slides
+    // carouse list 앞뒤에 복사한 엘리먼트 추가(무한 슬라이딩 기능)
     this.list.insertBefore(this.clonedLast, this.list.firstElementChild);
     this.list.appendChild(this.clonedFirst);
     this.list.style.transform = `translate3d(-${itemWidth *
@@ -63,9 +63,7 @@ $(document).ready(function() {
       //애니메이션 없이 처음 아이템 자리로 이동시킴
       setTimeout(() => {
         this.list.style.transitionDuration = "0ms";
-        this.list.style.transform = `translate3d(-${
-          this.itemWidth
-        }px, 0px, 0px)`;
+        this.list.style.transform = `translate3d(-${this.itemWidth}px, 0px, 0px)`;
       }, this.moveSpeed);
       //아래서 Index가 증가하기 때문에 선처리
       this.curIndex = -1;
@@ -127,6 +125,30 @@ $(document).ready(function() {
   }
 
   //3. 프로모션 영역 슬라이딩 이미지 기능
-  let promotionCarousel = new Carousel();
-  promotionCarousel.auto();
+  //3-1. Promotion API로 데이터 가져오기
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:8080/api/promotions",
+    dataType: "JSON",
+    success: function(data) {
+      //3-2. Promotion Template 세팅
+      let carouselItemListTemp = "";
+      let carouselItemTemp = document.querySelector("#template-carousel-item")
+        .innerHTML;
+
+      if (data.items.length) {
+        data.items.forEach(item => {
+          carouselItemListTemp += carouselItemTemp.replace(
+            "{img}",
+            `../../${item.productImageUrl}`
+          );
+        });
+      }
+      document.querySelector(".carousel-list").innerHTML = carouselItemListTemp;
+
+      //3-3. Carousel 기능 binding
+      let promotionCarousel = new Carousel();
+      promotionCarousel.auto();
+    }
+  });
 });
