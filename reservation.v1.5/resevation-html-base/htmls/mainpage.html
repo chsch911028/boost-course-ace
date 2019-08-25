@@ -18,6 +18,9 @@
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
       crossorigin="anonymous"
     ></script>
+    <script id="template-carousel-item" type="text/template">
+      <div class="item carousel-item" style="background-image:url('{img}');"></div>
+    </script>
     <script src="https://unpkg.com/popmotion/dist/popmotion.global.min.js"></script>
     <script type="text/javascript" src="../js/index.js"></script>
   </head>
@@ -61,26 +64,7 @@
               <div>
                 <div class="container_visual carousel-box">
                   <!-- 슬라이딩기능: 이미지 (type = 'th')를 순차적으로 노출 -->
-                  <ul class="visual_img carousel-list">
-                    <div
-                      class="item carousel-item"
-                      style="background-color: aqua"
-                    >
-                      <div class="img_bg"></div>
-                    </div>
-                    <div
-                      class="item carousel-item"
-                      style="background-color:brown"
-                    >
-                      <div class="img_bg"></div>
-                    </div>
-                    <div
-                      class="item carousel-item"
-                      style="background-color: palevioletred"
-                    >
-                      <div class="img_bg"></div>
-                    </div>
-                  </ul>
+                  <ul class="visual_img carousel-list"></ul>
                 </div>
                 <span class="nxt_fix" style="display:none;"></span>
               </div>
