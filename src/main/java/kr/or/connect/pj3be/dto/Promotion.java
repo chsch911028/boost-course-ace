@@ -27,7 +27,7 @@ public class Promotion {
     }
 
     public void setProductImageUrl(String productImageUrl) {
-        this.productImageUrl = productImageUrl;
+        this.productImageUrl = "img/"+productImageUrl;
     }
 
     @Override
