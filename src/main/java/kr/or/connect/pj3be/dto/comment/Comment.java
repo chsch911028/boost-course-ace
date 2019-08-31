@@ -1,5 +1,7 @@
 package kr.or.connect.pj3be.dto.comment;
 
+import java.util.List;
+
 public class Comment {
     private String comment; // 상품평
     private Integer commentId; // 상품평 Id

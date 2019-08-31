@@ -1,6 +1,8 @@
 package kr.or.connect.pj3be.dto.displayInfo;
 
 import kr.or.connect.pj3be.dto.comment.Comment;
+import kr.or.connect.pj3be.dto.product.ProductImage;
+import kr.or.connect.pj3be.dto.product.ProductPrice;
 
 import java.util.List;
 
