@@ -3,6 +3,7 @@
 <%@page import="java.util.*"%>
 <%
     request.setCharacterEncoding("UTF-8");
+    response.sendRedirect("mainpage.html");
 %>
 
 <html>
