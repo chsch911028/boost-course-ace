@@ -1,7 +1,7 @@
 package kr.or.connect.pj3be.service;
 
 import kr.or.connect.pj3be.dao.CategoryDao;
-import kr.or.connect.pj3be.dto.Category;
+import kr.or.connect.pj3be.dto.category.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

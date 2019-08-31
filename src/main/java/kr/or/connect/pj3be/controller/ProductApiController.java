@@ -1,6 +1,6 @@
 package kr.or.connect.pj3be.controller;
 
-import kr.or.connect.pj3be.dto.Product;
+import kr.or.connect.pj3be.dto.product.Product;
 import kr.or.connect.pj3be.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,5 +31,8 @@ public class ProductApiController {
         map.put("totalCount", totalCount);
         return map;
     }
+
+    @GetMapping("/{displayInfoId}")
+    
 
 }

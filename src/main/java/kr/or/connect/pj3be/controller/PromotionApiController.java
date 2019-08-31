@@ -1,6 +1,6 @@
 package kr.or.connect.pj3be.controller;
 
-import kr.or.connect.pj3be.dto.Promotion;
+import kr.or.connect.pj3be.dto.promotion.Promotion;
 import kr.or.connect.pj3be.service.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,7 +1,7 @@
 package kr.or.connect.pj3be.dao;
 
 import static kr.or.connect.pj3be.sql.PromotionDaoSqls.*;
-import kr.or.connect.pj3be.dto.Promotion;
+import kr.or.connect.pj3be.dto.promotion.Promotion;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;

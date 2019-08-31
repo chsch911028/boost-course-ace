@@ -1,7 +1,7 @@
 package kr.or.connect.pj3be.dao;
 
 import static kr.or.connect.pj3be.sql.CategoryDaoSqls.*;
-import kr.or.connect.pj3be.dto.Category;
+import kr.or.connect.pj3be.dto.category.Category;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;

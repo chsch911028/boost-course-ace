@@ -1,6 +1,6 @@
 package kr.or.connect.pj3be.service;
 
-import kr.or.connect.pj3be.dto.Promotion;
+import kr.or.connect.pj3be.dto.promotion.Promotion;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package kr.or.connect.pj3be.service;
 
-import kr.or.connect.pj3be.dto.Category;
+import kr.or.connect.pj3be.dto.category.Category;
 
 import java.util.List;
 

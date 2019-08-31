@@ -1,6 +1,6 @@
 package kr.or.connect.pj3be.controller;
 
-import kr.or.connect.pj3be.dto.Category;
+import kr.or.connect.pj3be.dto.category.Category;
 import kr.or.connect.pj3be.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
