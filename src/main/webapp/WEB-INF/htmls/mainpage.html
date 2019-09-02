@@ -23,7 +23,7 @@
     </script>
     <script id="template-product-item" type="text/template">
       <li class="item" product-id="{productId}" display-info="{displayInfoId}">
-        <a href="detail.html" class="item_book">
+        <a href="detail.html?displayInfoId={displayInfoId}" class="item_book">
           <div class="item_preview">
             <img
               alt="{placeName}"
@@ -43,6 +43,8 @@
       </li>
     </script>
     <script src="https://unpkg.com/popmotion/dist/popmotion.global.min.js"></script>
+    <script type="text/javascript" src="../js/Constants.js"></script>
+    <script type="text/javascript" src="../js/Carousel.js"></script>
     <script type="text/javascript" src="../js/index.js"></script>
   </head>
 
