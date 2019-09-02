@@ -1,6 +1,7 @@
 package kr.or.connect.pj3be.controller;
 
 import kr.or.connect.pj3be.dto.category.Category;
+import kr.or.connect.pj3be.dto.category.CategoryResponse;
 import kr.or.connect.pj3be.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +20,9 @@ public class CategoryApiController {
     CategoryService categoryService;
 
     @GetMapping
-    public Map<String, Object> list(){
-        List<Category> list = categoryService.getList();
-        Map<String, Object> map = new HashMap<>();
-        map.put("items", list);
-        return map;
+    public CategoryResponse getAllCategories(){
+        CategoryResponse categoryResponse = new CategoryResponse();
+        categoryResponse.setItems(categoryService.getAllCategories());
+        return categoryResponse;
     }
 }
