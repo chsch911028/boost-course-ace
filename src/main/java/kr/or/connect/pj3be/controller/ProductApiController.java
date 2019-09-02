@@ -1,12 +1,13 @@
 package kr.or.connect.pj3be.controller;
 
+import kr.or.connect.pj3be.dto.displayInfo.DisplayInfo;
+import kr.or.connect.pj3be.dto.displayInfo.DisplayInfoResponse;
 import kr.or.connect.pj3be.dto.product.Product;
+import kr.or.connect.pj3be.dto.product.ProductResponse;
+import kr.or.connect.pj3be.service.DisplayInfoService;
 import kr.or.connect.pj3be.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,21 +19,25 @@ public class ProductApiController {
 
     @Autowired
     ProductService productService;
+    @Autowired
+    DisplayInfoService displayInfoService;
 
     @GetMapping
-    public Map<String, Object> list(@RequestParam(required = false) Integer categoryId,
-                                    @RequestParam(required = false, defaultValue = "0") Integer start){
+    public ProductResponse getProducts(@RequestParam(required = false) Integer categoryId,
+                                       @RequestParam(required = false, defaultValue = "0") Integer start){
 
-        List<Product> list = productService.getList(categoryId,start);
-        Integer totalCount = productService.getCount(categoryId);
+        List<Product> items = productService.getProducts(categoryId,start);
+        Integer totalCount = productService.getProductsCount(categoryId);
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("items", list);
-        map.put("totalCount", totalCount);
-        return map;
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setItems(items);
+        productResponse.setTotalCount(totalCount);
+
+        return productResponse;
     }
 
     @GetMapping("/{displayInfoId}")
-    
-
+    public DisplayInfoResponse getDisplayInfo(@PathVariable Integer displayInfoId){
+        return displayInfoService.getDisplayInfoResponse(displayInfoId);
+    }
 }
