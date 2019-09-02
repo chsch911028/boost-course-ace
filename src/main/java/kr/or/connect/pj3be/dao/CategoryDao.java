@@ -18,7 +18,7 @@ public class CategoryDao {
 
     private NamedParameterJdbcTemplate jdbc;
     private SimpleJdbcInsert insertAction;
-    private RowMapper<Category> rowMapper = BeanPropertyRowMapper.newInstance(Category.class);
+    private RowMapper<Category> categoryRowMapper = BeanPropertyRowMapper.newInstance(Category.class);
 
     public CategoryDao(DataSource dataSource) {
         this.jdbc = new NamedParameterJdbcTemplate(dataSource);
@@ -27,8 +27,8 @@ public class CategoryDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Category> selectAll(){
-        return this.jdbc.query(SELECT_ALL, Collections.emptyMap(), rowMapper);
+    public List<Category> getAllCategories(){
+        return this.jdbc.query(SELECT_ALL_CATEGORIES, Collections.emptyMap(), categoryRowMapper);
     }
 
 }
