@@ -17,17 +17,14 @@ import java.util.List;
 public class PromotionDao {
 
     private NamedParameterJdbcTemplate jdbc;
-    private SimpleJdbcInsert insertAction;
-    private RowMapper<Promotion> rowMapper = BeanPropertyRowMapper.newInstance(Promotion.class);
+    private RowMapper<Promotion> promotionRowMapper = BeanPropertyRowMapper.newInstance(Promotion.class);
 
     public PromotionDao(DataSource dataSource) {
         this.jdbc = new NamedParameterJdbcTemplate(dataSource);
-        this.insertAction = new SimpleJdbcInsert(dataSource)
-                .withTableName("promotion")
-                .usingGeneratedKeyColumns("id");
+
     }
 
-    public List<Promotion> selectAll(){
-        return this.jdbc.query(SELECT_ALL, Collections.emptyMap(), rowMapper);
+    public List<Promotion> getAllPromotions(){
+        return this.jdbc.query(SELECT_ALL_PROMOTIONS, Collections.emptyMap(), promotionRowMapper);
     }
 }
