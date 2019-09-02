@@ -1,16 +1,16 @@
 package kr.or.connect.pj3be.dto.comment;
 
 public class CommentImage {
+    private Integer fileId; //파일 id
+    private Integer imageId; //이미지 Id
+    private String fileName; // 파일 이름
+    private String saveFileName; //파일 저장 위치 이름
     private String contentType; //파일 확장자
     private String createDate; // ($date-time) 생성일
-    private Boolean deleteFlag; // 삭제 여부
-    private Integer fileId; //파일 id
-    private String fileName; // 파일 이름
-    private Integer imageId; //이미지 Id
     private String modifyDate; //($date-time) 수정일
+    private Boolean deleteFlag; // 삭제 여부
     private Integer reservationInfoId; //예약 Id
     private Integer reservationUserCommentId; //예약자 상품평 Id
-    private String saveFileName; //파일 저장 위치 이름
 
     public String getContentType() {
         return contentType;
