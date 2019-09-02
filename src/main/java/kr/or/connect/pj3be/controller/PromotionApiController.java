@@ -1,6 +1,7 @@
 package kr.or.connect.pj3be.controller;
 
 import kr.or.connect.pj3be.dto.promotion.Promotion;
+import kr.or.connect.pj3be.dto.promotion.PromotionResponse;
 import kr.or.connect.pj3be.service.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +20,7 @@ public class PromotionApiController {
     PromotionService promotionService;
 
     @GetMapping
-    public Map<String, Object> list(){
-
-        List<Promotion> list = promotionService.getList();
-        Map<String, Object> map = new HashMap<>();
-        map.put("items", list);
-        return map;
+    public PromotionResponse getAllPromotions(){
+        return promotionService.getAllPromotions();
     }
 }
