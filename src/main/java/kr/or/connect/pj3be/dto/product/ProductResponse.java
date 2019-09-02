@@ -3,15 +3,15 @@ package kr.or.connect.pj3be.dto.product;
 import java.util.List;
 
 public class ProductResponse {
-    private List<Product> productitems; // 제품 목록
+    private List<Product> items; // 제품 목록
     private Integer totalCount; // 제품 갯수
 
-    public List<Product> getProductitems() {
-        return productitems;
+    public List<Product> getItems() {
+        return items;
     }
 
-    public void setProductitems(List<Product> productitems) {
-        this.productitems = productitems;
+    public void setItems(List<Product> items) {
+        this.items = items;
     }
 
     public Integer getTotalCount() {
@@ -25,7 +25,7 @@ public class ProductResponse {
     @Override
     public String toString() {
         return "ProductResponse{" +
-                "productitems=" + productitems +
+                "items=" + items +
                 ", totalCount=" + totalCount +
                 '}';
     }
