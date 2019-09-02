@@ -1,6 +1,8 @@
 package kr.or.connect.pj3be.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
@@ -14,12 +16,17 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @EnableTransactionManagement
+@PropertySource("classpath:application.properties")
 public class DBConfig implements TransactionManagementConfigurer {
-    private String driverClassName = "com.mysql.jdbc.Driver";
 
-    private String url = "jdbc:mysql://localhost:3306/connectdb?useUnicode=true&characterEncoding=utf8";
-    private String username = "root";
-    private String password = "root";
+    @Value("${spring.datasource.driver-class-name}")
+    private String driverClassName;
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
 
     @Bean
     public DataSource dataSource() {
