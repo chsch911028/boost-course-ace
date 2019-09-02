@@ -1,15 +1,17 @@
 package kr.or.connect.pj3be.dto.displayInfo;
 
 public class DisplayInfoImage {
-    private String contentType;
-    private String createDate; //$date-tim
-    private boolean deleteFlag;
+
     private Integer displayInfoId;
     private Integer displayInfoImageId;
     private Integer fileId;
     private String fileName;
-    private String modifyDate; //$date-tim
     private String saveFileName;
+    private String contentType;
+    private String createDate; //$date-tim
+    private String modifyDate; //$date-tim
+    private boolean deleteFlag;
+
 
     public String getContentType() {
         return contentType;
