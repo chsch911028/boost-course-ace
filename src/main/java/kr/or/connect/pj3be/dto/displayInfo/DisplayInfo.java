@@ -4,20 +4,20 @@ public class DisplayInfo {
 
     private Integer categoryId;
     private String categoryName;
-    private String createDate;; //$date-tim
     private Integer displayInfoId;
     private String email;
-    private String homepage	;
-    private String modifyDate; //$date-tim
+    private String homepage;
+    private String telephone;
     private String openingHours;
     private String placeLot;
     private String placeName;
     private String placeStreet;
+    private String createDate;; //$date-tim
+    private String modifyDate; //$date-tim
+    private Integer productId;
     private String productContent;
     private String productDescription;
     private String productEvent;
-    private Integer productId;
-    private String telephone;
 
     public Integer getCategoryId() {
         return categoryId;
