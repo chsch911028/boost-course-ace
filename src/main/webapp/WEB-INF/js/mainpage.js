@@ -1,3 +1,7 @@
+import { URL, PRODUCTS_API_PATH, PROMOTIONS_API_PATH } from "./Constants.js";
+
+import Carousel from "./Carousel.js";
+
 $(document).ready(function() {
   const BOOKING_LOING_PAGE_URL = "./bookinglogin.html";
   const MY_RESERVATION_PAGE_URL = "./myreservation.html";
@@ -292,4 +296,11 @@ $(document).ready(function() {
       }
     });
   });
+
+  //7. TOP 버튼 클릭시 위로 이동
+  const linkTopEl = document.querySelector(`.lnk_top`);
+  const handleClickEventOfLinkTopEl = e => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  linkTopEl.addEventListener("click", handleClickEventOfLinkTopEl);
 });

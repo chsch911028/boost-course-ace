@@ -2393,7 +2393,6 @@ button {
 
 .section_review_list .short_review_area .grade_area .graph_value {
     display: inline-block;
-    width: 78px;
     height: 14px;
     background-position: 0 -76px;
     vertical-align: top
@@ -3831,8 +3830,10 @@ button {
 .carousel-wrap { position: relative; width: 414px; margin: auto; padding-bottom: 30px; }
 /* .carousel-box { width: 100%; margin: auto; overflow-x: hidden; } */
 .carousel-box {}
-.carousel-list {}
+.carousel-list { cursor: auto;}
 .carousel-item { width: 414px;}
 /* .carousel-item { display: table; float: left; width: 400px; height: 400px; } */
 .carousel-next-btn{}
 .carousel-prev-btn{}
+
+.carousel-item .img_thumb{ height: 100%;}

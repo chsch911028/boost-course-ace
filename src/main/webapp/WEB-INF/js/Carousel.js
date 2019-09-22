@@ -1,3 +1,8 @@
+import {
+  CAROUSEL_DEFAULT_ITEM_WITH,
+  CAROUSEL_DEFAULT_MOVE_SPEED
+} from "./Constants.js";
+
 //[참고 블로그] https://im-developer.tistory.com/97
 function Carousel(
   parentsClass = "",
@@ -8,6 +13,9 @@ function Carousel(
   this.items = document.querySelectorAll(`${parentsClass}.carousel-item`);
   this.nextBtn = document.querySelector(`${parentsClass}.carousel-next-btn`);
   this.prevBtn = document.querySelector(`${parentsClass}.carousel-prev-btn`);
+
+  this.nextCallBack = () => {};
+  this.prevCallBack = () => {};
 
   this.len = this.items.length;
   this.moveSpeed = moveSpeed;
@@ -32,14 +40,14 @@ function Carousel(
 
   /** Next Button Event */
   if (this.nextBtn) {
-    this.nextBtn.addEventListener("click", function() {
+    this.nextBtn.addEventListener("click", () => {
       this.next();
     });
   }
 
   /** Prev Button Event */
   if (this.prevBtn) {
-    this.prevBtn.addEventListener("click", function() {
+    this.prevBtn.addEventListener("click", () => {
       this.prev();
     });
   }
@@ -69,6 +77,9 @@ Carousel.prototype.next = function() {
   this.curItem.classList.remove("carousel-show");
   this.curItem = this.items[++this.curIndex];
   this.curItem.classList.add("carousel-show");
+
+  //커스텀 콜백함수 실행
+  this.nextCallBack();
 };
 
 Carousel.prototype.prev = function() {
@@ -96,6 +107,9 @@ Carousel.prototype.prev = function() {
   this.curItem.classList.remove("carousel-show");
   this.curItem = this.items[--this.curIndex];
   this.curItem.classList.add("carousel-show");
+
+  //커스텀 콜백함수 실행
+  this.nextCallBack();
 };
 
 Carousel.prototype.auto = function(slideTime = 1000) {
@@ -106,3 +120,5 @@ Carousel.prototype.auto = function(slideTime = 1000) {
     this.next();
   }, slideTime);
 };
+
+export default Carousel;
