@@ -20,11 +20,11 @@ import java.util.List;
 public class DisplayInfoServiceImpl implements DisplayInfoService {
 
     @Autowired
-    DisplayInfoDao displayInfoDao;
+    private DisplayInfoDao displayInfoDao;
     @Autowired
-    ProductDao productDao;
+    private ProductDao productDao;
     @Autowired
-    CommentDao commentDao;
+    private CommentDao commentDao;
 
     @Transactional(readOnly = true)
     @Override

@@ -17,7 +17,7 @@ import java.util.Map;
 public class CategoryApiController {
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @GetMapping
     public CategoryResponse getAllCategories(){

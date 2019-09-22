@@ -18,9 +18,9 @@ import java.util.Map;
 public class ProductApiController {
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
     @Autowired
-    DisplayInfoService displayInfoService;
+    private DisplayInfoService displayInfoService;
 
     @GetMapping
     public ProductResponse getProducts(@RequestParam(required = false) Integer categoryId,

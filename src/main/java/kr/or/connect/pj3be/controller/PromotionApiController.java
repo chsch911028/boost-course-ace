@@ -17,7 +17,7 @@ import java.util.Map;
 public class PromotionApiController {
 
     @Autowired
-    PromotionService promotionService;
+    private PromotionService promotionService;
 
     @GetMapping
     public PromotionResponse getAllPromotions(){

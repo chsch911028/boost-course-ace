@@ -14,9 +14,9 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService{
 
     @Autowired
-    ProductDao productDao;
+    private ProductDao productDao;
     @Autowired
-    CategoryDao categoryDao;
+    private CategoryDao categoryDao;
 
     @Transactional(readOnly = true)
     @Override

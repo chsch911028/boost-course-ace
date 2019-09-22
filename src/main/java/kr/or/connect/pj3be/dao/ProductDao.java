@@ -67,15 +67,23 @@ public class ProductDao {
         return insertAction.executeAndReturnKey(params).longValue();
     }
 
-    /* ##### PRODUCT_IMAGE ##### */
-
+    /**
+     * PRODUCT_IMAGE
+     *
+     * @param productId
+     * @return List<ProductImage>
+     */
     public List<ProductImage> getAllProductImages(Integer productId){
         Map<String, Integer> params = Collections.singletonMap("productId", productId);
         return this.jdbc.query(SELECT_ALL_PRODUCT_IMAGES_BY_PRODUCT_ID, params, productImageRowMapper);
     }
 
-    /* ##### PRODUCT_PRICE ##### */
-
+    /**
+     * PRODUCT_PRICE
+     *
+     * @param productId
+     * @return List<ProductPrice>
+     */
     public List<ProductPrice> getAllProductPrices(Integer productId){
         Map<String, Integer> params = Collections.singletonMap("productId", productId);
         return this.jdbc.query(SELECT_ALL_PRODUCT_PRICES_BY_PRODUCT_ID, params, productPriceRowMapper);

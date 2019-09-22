@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PromotionServiceImpl implements PromotionService {
 
     @Autowired
-    PromotionDao promotionDao;
+    private PromotionDao promotionDao;
 
     @Transactional(readOnly = true)
     @Override
